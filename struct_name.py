@@ -18,36 +18,32 @@ class StructInput(object):
         return [self.letterPoint[key] for key in self.letterPoint.keys() if letter in key][0]
 
     def give_letters(self):
-        self.letters = raw_input("7 letters: ")
+        self.letters = sorted(raw_input("7 letters: ").lower())
         if len(self.letters) != 7:
             print "Letters count must be equal 7"
             self.give_letters()
 
-    def find_letter(self, letter):
-        for l in self.lettersCopy:
-            if l == letter:
-                self.lettersCopy.remove(l)
-                index = self.wordCopy.index(letter)
-                return self.wordCopy.pop(index)
-
     def find_word(self, word):
-        self.wordCopy = list(word)
-        self.lettersCopy = list(self.letters)
-        temp_word = map(self.find_letter, word)
+        wordCopy = list(word)
+        lettersCopy = list(self.letters)
+        for letter in sorted(word):
+            for l in lettersCopy:
+                if l == letter:
+                    lettersCopy.remove(l)
+                    index = wordCopy.index(letter)
+                    wordCopy.pop(index)
 
-        if len(self.wordCopy) == 0 and word == ''.join(temp_word):
-            scores = map(self.find_letter_score, word)
-            scores_sum = sum(scores)
+        if len(wordCopy) == 0:
+            scores_sum = sum(map(self.find_letter_score, word))
             if not self.result or self.result[1] < scores_sum:
                 self.result = [word, scores_sum]
-                #self.result.append(word, sum)
 
     def input(self):
         wordsList = []
         for i in range(int(raw_input("Input: "))):
-            wordsList.append(raw_input())
+            wordsList.append(raw_input().lower())
 
         self.give_letters()
         # Find matches
         map(self.find_word, wordsList)
-        print self.result
+        print self.result[0]
