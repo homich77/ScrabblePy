@@ -18,7 +18,7 @@ class StructInput(object):
         return [self.letterPoint[key] for key in self.letterPoint.keys() if letter in key][0]
 
     def give_letters(self):
-        self.letters = sorted(raw_input("7 letters: ").lower())
+        self.letters = sorted(raw_input("7 letters: ").strip().lower())
         if len(self.letters) != 7:
             print "Letters count must be equal 7"
             self.give_letters()
