@@ -2,7 +2,8 @@ __author__ = 'user'
 import redis
 
 class StructInput(object):
-    #letterPoint
+    result = {}
+
     def __init__(self):
         f = open('Scores.txt', 'r')
         self.letterPoint = {}
@@ -11,9 +12,7 @@ class StructInput(object):
                 self.letterPoint[line.split()[0]] = int(line.split()[1])
         finally:
             f.close()
-        #print self.letterPoint
 
-    result = {}
     def find_letter_score(self, letter):
         return [self.letterPoint[key] for key in self.letterPoint.keys() if letter in key][0]
 
@@ -32,6 +31,9 @@ class StructInput(object):
                     lettersCopy.remove(l)
                     index = wordCopy.index(letter)
                     wordCopy.pop(index)
+                    break
+                elif l > letter:
+                    return
 
         if len(wordCopy) == 0:
             scores_sum = sum(map(self.find_letter_score, word))
