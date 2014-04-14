@@ -2,15 +2,17 @@ __author__ = 'user'
 import redis
 
 class StructInput(object):
-    letterPoint = {
-        ('e', 'a', 'i', 'o', 'n', 'r', 't', 'l', 's', 'u' ): 1,
-        ('d', 'g'): 2,
-        ('b', 'c', 'm', 'p'): 3,
-        ('f', 'h', 'v', 'w', 'y'): 4,
-        ('k'): 5,
-        ('j', 'x'): 8,
-        ('q', 'z'): 10
-    }
+    #letterPoint
+    def __init__(self):
+        f = open('Scores.txt', 'r')
+        self.letterPoint = {}
+        try:
+            for line in f:
+                self.letterPoint[line.split()[0]] = int(line.split()[1])
+        finally:
+            f.close()
+        #print self.letterPoint
+
     result = {}
     def find_letter_score(self, letter):
         return [self.letterPoint[key] for key in self.letterPoint.keys() if letter in key][0]
@@ -28,12 +30,6 @@ class StructInput(object):
                 index = self.wordCopy.index(letter)
                 return self.wordCopy.pop(index)
 
-    def sum_score(self, score_letters):
-        sum = 0
-        for score in score_letters:
-            sum += int(score)
-        return sum
-
     def find_word(self, word):
         self.wordCopy = list(word)
         self.lettersCopy = list(self.letters)
@@ -41,9 +37,9 @@ class StructInput(object):
 
         if len(self.wordCopy) == 0 and word == ''.join(temp_word):
             scores = map(self.find_letter_score, word)
-            sum = self.sum_score(scores)
-            if not self.result or self.result[1] < sum:
-                self.result = [word, sum]
+            scores_sum = sum(scores)
+            if not self.result or self.result[1] < scores_sum:
+                self.result = [word, scores_sum]
                 #self.result.append(word, sum)
 
     def input(self):
@@ -54,4 +50,4 @@ class StructInput(object):
         self.give_letters()
         # Find matches
         map(self.find_word, wordsList)
-        print self.result[0]
+        print self.result
